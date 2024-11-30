@@ -1,6 +1,6 @@
-use crate::{Packet, PacketReader, Result};
-use crate::fields::{encode_string, encode_var_int};
+use crate::fields::encode_var_int;
 use crate::packets::configuration::KnownPack;
+use crate::{Packet, PacketReader, Result};
 
 #[derive(Debug)]
 pub struct ServerBoundKnownPacks {

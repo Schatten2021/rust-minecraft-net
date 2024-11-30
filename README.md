@@ -1,4 +1,6 @@
 # minecraft-net
+This work is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1)
+
 **This package is a work in progress**
 
 A package implementing the 1.21.1 minecraft protocol.

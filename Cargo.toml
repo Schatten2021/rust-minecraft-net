@@ -2,6 +2,11 @@
 name = "minecraft-net"
 version = "0.1.0"
 edition = "2021"
+authors = ["Schatten2020"]
+description = "A library allowing easier communication via the minecraft protocol"
+categories = ["network-programming", "game-development"]
+license-file = "LICENSE"
+repository = "https://github.com/Schatten2021/rust-minecraft-net.git"
 
 [dependencies]
 flate2 = { version = "1.0.35", features = ["zlib"], default-features = false }
