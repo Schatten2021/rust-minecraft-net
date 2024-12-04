@@ -6,14 +6,14 @@ This work is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/
 A package implementing the 1.21.1 minecraft protocol.
 
 ## Features / Goals
-- [ ] Structs for all Packes (~18%)
+- [ ] Structs for all Packes (~74/221 ~33%)
   - [X] Hanshake (1 packet)
   - [X] Status (4 packets)
   - [X] Login (11 packets)
   - [X] Configuration (25 packets)
-  - [ ] Play (180 packets)
-  - [ ] improved usability
-  - [ ] checking validity
+  - [ ] Play (180 packets) (33 somewhat done, 7 missing fields)
+- [ ] improved usability
+- [ ] checking validity
 - [X] Encoding/Decoding packets
 - [X] Helper for encrypted connections
 - [ ] Documentation :(

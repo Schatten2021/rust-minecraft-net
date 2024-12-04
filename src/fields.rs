@@ -10,6 +10,7 @@ pub fn encode_bool(boolean: bool) -> Vec<u8> {
 }
 pub fn encode_ubyte(ubyte: u8) -> Vec<u8> {vec![ubyte]}
 pub fn encode_byte(byte: i8) -> Vec<u8> {vec![byte as u8]}
+pub fn encode_short(short: i16) -> Vec<u8> {vec![(short >> 8) as u8, short as u8]}
 pub fn encode_ushort(ushort: u16) -> Vec<u8> {
     vec![(ushort >> 8) as u8, ushort as u8]
 }
@@ -19,6 +20,14 @@ pub fn encode_int(int: i32) -> Vec<u8> {
         (int >> 16) as u8,
         (int >> 8) as u8,
         int as u8,
+    ]
+}
+pub fn encode_uint(uint: u32) -> Vec<u8> {
+    vec![
+        (uint >> 24) as u8,
+        (uint >> 16) as u8,
+        (uint >> 8) as u8,
+        uint as u8,
     ]
 }
 pub fn encode_long(long: i64) -> Vec<u8> {
@@ -39,6 +48,13 @@ pub fn encode_uuid(uuid: u128) -> Vec<u8> {
         res.push((uuid >> ((15 - i) * 8) ) as u8)
     }
     res
+}
+
+pub fn encode_float(float: f32) -> Vec<u8> {
+    encode_uint(float.to_bits())
+}
+pub fn encode_double(double: f64) -> Vec<u8> {
+    encode_long(double.to_bits() as i64)
 }
 
 pub fn read_var_int_from_stream(stream: &mut impl Read) -> Result<i32, Errors> {
@@ -78,6 +94,25 @@ pub fn encode_var_int(int: i32) -> Vec<u8> {
         remaining >>= 7;
     }
 }
+pub fn encode_var_long(long: i64) -> Vec<u8> {
+    if long == 0 {
+        return vec![0];
+    }
+    let mut result = Vec::new();
+    let mut remaining = long;
+    loop {
+        let mut segment = (remaining as u8) & SEGMENT_BITS;
+        let cont = (segment as i64) != remaining;
+        if cont {
+            segment |= CONTINUE_BIT;
+        }
+        result.push(segment);
+        if !cont {
+            return result;
+        }
+        remaining >>= 7;
+    }
+}
 pub fn var_int_size(var_int: i32) -> usize {
     encode_var_int(var_int).len()
 }
@@ -91,6 +126,7 @@ pub fn encode_string(string: String) -> Vec<u8> {
 pub fn encode_identifier(ident: String) -> Vec<u8> {
     encode_string(ident)
 }
+pub fn encode_angle(angle: u8) -> Vec<u8> {encode_ubyte(angle)}
 
 
 
@@ -118,6 +154,10 @@ impl PacketReader {
     pub fn read_ushort(&mut self) -> u16 {
         self.concat(2) as u16
     }
+    pub fn read_short(&mut self) -> i16 { self.concat(2) as i16 }
+    pub fn read_uint(&mut self) -> u32 {
+        self.concat(4) as u32
+    }
     pub fn read_int(&mut self) -> i32 {
         let arr = self.read_n(4);
         (arr[0] as i32) << 24 |
@@ -137,6 +177,12 @@ impl PacketReader {
     pub fn read_uuid(&mut self) -> u128 {
         self.concat(16)
     }
+    
+    pub fn read_float(&mut self) -> f32 {f32::from_bits(self.read_uint())}
+    pub fn read_double(&mut self) -> f64 {
+        f64::from_bits(self.read_long() as u64)
+    }
+    
     pub fn read_var_int(&mut self) -> Result<i32, Errors> {
         let mut value: i32 = 0;
         let mut position = 0;
@@ -148,6 +194,21 @@ impl PacketReader {
             }
             position += 7;
             if position >= 32 {
+                return Err(Errors::InvalidField("Invalid VarInt".into()));
+            }
+        }
+    }
+    pub fn read_var_long(&mut self) -> Result<i64, Errors> {
+        let mut value: i64 = 0;
+        let mut position = 0;
+        loop {
+            let byte = self.read();
+            value |= ((byte & SEGMENT_BITS) as i64) << position;
+            if (byte & CONTINUE_BIT) == 0 {
+                return Ok(value);
+            }
+            position += 7;
+            if position >= 64 {
                 return Err(Errors::InvalidField("Invalid VarInt".into()));
             }
         }
@@ -169,6 +230,7 @@ impl PacketReader {
         self.position = self.data.len();
         res
     }
+    pub fn read_angle(&mut self) -> u8 {self.read_ubyte()}
 }
 impl Buf for PacketReader {
     fn remaining(&self) -> usize {
