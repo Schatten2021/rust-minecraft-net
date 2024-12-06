@@ -1,5 +1,3 @@
-use crate::{Packet, PacketReader, Result};
-
 #[derive(Debug)]
 pub struct BlockEntity {
     packed_xz: u8,

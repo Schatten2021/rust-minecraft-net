@@ -16,3 +16,9 @@ pub trait Packet: Sized {
 }
 pub trait Stream: Read + Write {}
 impl<T> Stream for T where T: Read + Write {}
+#[macro_export] macro_rules! join {
+    () => { vec![] };
+    ( $( $vec:expr ),* ) => {
+        vec![$( $vec ),*].iter().flatten().cloned().collect()
+    };
+}

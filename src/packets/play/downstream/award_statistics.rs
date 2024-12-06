@@ -1,6 +1,7 @@
 use crate::{Packet, PacketReader, Result};
 use crate::fields::encode_var_int;
 
+//TODO: implement 
 #[derive(Debug)]
 pub struct Statistic {
     pub category_id: i32,

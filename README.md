@@ -23,3 +23,5 @@ This project is not in any way affiliated with Mojang and/or Microsoft.
 Use at your own risk.
 
 It is also still in development.
+
+Based on [wiki.vg](https://wiki.vg) which has been shutdown is migrating to [minecraft.wiki](https://minecraft.wiki).

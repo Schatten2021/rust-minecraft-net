@@ -1,18 +1,9 @@
-use crate::Result;
-use crate::{Packet, PacketReader};
-use crate::fields::encode_long;
-#[derive(Debug)]
+use minecraft_net_proc::Packet;
+#[derive(Debug, Packet)]
+#[id = 0x04]
 pub struct ClientBoundKeepAlive {
+    #[Const]
     pub id: i64,
-}
-impl Packet for ClientBoundKeepAlive {
-    const ID: i32 = 0x04;
-    fn to_bytes(&self) -> Vec<u8> {
-        encode_long(self.id)
-    }
-    fn from_reader(reader: &mut PacketReader) -> Result<Self> {
-        Ok(Self {id: reader.read_long()})
-    }
 }
 impl ClientBoundKeepAlive {
     pub fn new(id: i64) -> Self {

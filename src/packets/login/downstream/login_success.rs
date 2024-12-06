@@ -1,5 +1,6 @@
 use crate::fields::{encode_bool, encode_string, encode_uuid, encode_var_int};
 use crate::{Errors, Packet, PacketReader};
+//TODO: add Packet derive
 #[derive(Debug)]
 pub struct Property {
     pub name: String,

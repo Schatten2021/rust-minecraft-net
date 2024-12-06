@@ -1,7 +1,8 @@
-use crate::{Packet, PacketReader, Result};
 use crate::fields::{encode_byte, encode_var_int};
 use crate::packets::Position;
+use crate::{Packet, PacketReader, Result};
 
+//TODO: add Packet
 #[derive(Debug)]
 pub struct SetBlockDestroyStage {
     entity_id: i32,

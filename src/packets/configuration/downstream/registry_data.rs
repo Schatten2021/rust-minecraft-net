@@ -1,6 +1,6 @@
 use crate::{Errors, Packet, PacketReader, Result};
 use crate::fields::{encode_bool, encode_string, encode_var_int};
-
+//TODO: implement Packet
 #[derive(Debug)]
 pub struct Entry {
     pub entry_id: String,

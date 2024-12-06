@@ -1,23 +1,15 @@
-use crate::{Packet, PacketReader, Result};
-use crate::fields::encode_var_int;
+use minecraft_net_proc::Packet;
 
-#[derive(Debug)]
+#[derive(Debug, Packet)]
+#[id = 0x17]
 pub struct SetCooldown {
+    #[Var]
     pub item_id: i32,
+    #[Var]
     pub cooldown_ticks: i32,
 }
-impl Packet for SetCooldown {
-    const ID: i32 = 0x16;
-    fn to_bytes(&self) -> Vec<u8> {
-        vec![
-            encode_var_int(self.item_id),
-            encode_var_int(self.cooldown_ticks)
-        ].iter().flatten().cloned().collect()
-    }
-    fn from_reader(reader: &mut PacketReader) -> Result<Self> {
-        Ok(Self {
-            item_id: reader.read_var_int()?,
-            cooldown_ticks: reader.read_var_int()?,
-        })
+impl SetCooldown {
+    pub fn new(item_id: i32, cooldown_ticks: i32) -> Self {
+        Self {item_id, cooldown_ticks}
     }
 }

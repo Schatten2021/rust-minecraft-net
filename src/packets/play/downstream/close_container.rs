@@ -1,17 +1,9 @@
-use crate::{Packet, PacketReader, Result};
+use minecraft_net_proc::Packet;
 
-#[derive(Debug)]
+#[derive(Debug, Packet)]
+#[id = 0x12]
 pub struct CloseContainer {
     pub window_id: u8
-}
-impl Packet for CloseContainer {
-    const ID: i32 = 0x12;
-    fn from_reader(reader: &mut PacketReader) -> Result<Self> {
-        Ok(Self {window_id: reader.read_ubyte()})
-    }
-    fn to_bytes(&self) -> Vec<u8> {
-        vec![self.window_id]
-    }
 }
 impl CloseContainer {
     pub fn new(window_id: u8) -> Self {

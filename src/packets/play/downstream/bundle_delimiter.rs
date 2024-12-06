@@ -1,12 +1,8 @@
-use crate::{Packet, PacketReader, Result};
-#[derive(Debug)]
-pub struct BundleDelimiter;
+use minecraft_net_proc::Packet;
+#[derive(Debug, Packet)]
+#[id = 0x00]
+pub struct BundleDelimiter {}
 
-impl Packet for BundleDelimiter {
-    const ID: i32 = 0x00;
-    fn to_bytes(&self) -> Vec<u8> {vec![]}
-    fn from_reader(_reader: &mut PacketReader) -> Result<Self> { Ok(Self{}) }
-}
 impl BundleDelimiter {
     pub fn new() -> Self {Self {}}
 }

@@ -1,5 +1,5 @@
+use crate::fields::{encode_float, encode_string, encode_ubyte, encode_uuid, encode_var_int};
 use crate::{Errors, Packet, PacketReader, Result};
-use crate::fields::{encode_float, encode_int, encode_string, encode_ubyte, encode_uuid, encode_var_int};
 
 #[derive(Debug, Clone)]
 pub struct BossBarAdd {

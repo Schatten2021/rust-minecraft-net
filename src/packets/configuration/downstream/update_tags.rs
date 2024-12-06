@@ -1,5 +1,6 @@
 use crate::fields::{encode_identifier, encode_var_int};
 use crate::{Packet, PacketReader, Result};
+//TODO: implement Packet
 #[derive(Debug)]
 pub struct Tag {
     pub tag_name: String,

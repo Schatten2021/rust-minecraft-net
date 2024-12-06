@@ -149,8 +149,20 @@ dependencies = [
  "bytes",
  "crab_nbt",
  "flate2",
+ "minecraft-net-proc",
  "openssl",
  "rand",
+]
+
+[[package]]
+name = "minecraft-net-proc"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "56ec7c15b19ca8f119de94c1b92d6618c5d96e19e238af8ab092fc52564fcc80"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

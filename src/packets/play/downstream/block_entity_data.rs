@@ -2,6 +2,7 @@ use crate::{Errors, Packet, PacketReader, Result};
 use crate::fields::encode_var_int;
 use crate::packets::Position;
 
+//TODO: add Packet
 #[derive(Debug)]
 pub struct BlockEntityData {
     location: Position,

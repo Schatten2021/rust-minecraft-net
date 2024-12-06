@@ -1,18 +1,10 @@
+use minecraft_net_proc::Packet;
 use rand::random;
-use crate::{Packet, PacketReader};
-use crate::fields::encode_int;
-#[derive(Debug)]
+#[derive(Debug, Packet)]
+#[id = 0x05]
 pub struct Ping {
+    #[Const]
     pub id: i32,
-}
-impl Packet for Ping {
-    const ID: i32 = 0x05;
-    fn to_bytes(&self) -> Vec<u8> {
-        encode_int(self.id)
-    }
-    fn from_reader(reader: &mut PacketReader) -> crate::errors::Result<Self> {
-        Ok(Self { id: reader.read_int() })
-    }
 }
 impl Ping {
     pub fn new() -> Self {

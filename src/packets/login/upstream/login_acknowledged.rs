@@ -1,13 +1,7 @@
-use crate::{Errors, Packet, PacketReader};
-#[derive(Debug)]
+use minecraft_net_proc::Packet;
+#[derive(Debug, Packet)]
+#[id = 0x03]
 pub struct LoginAcknowledged {}
-impl Packet for LoginAcknowledged {
-    const ID: i32 = 0x03;
-    fn to_bytes(&self) -> Vec<u8> { vec![] }
-    fn from_reader(_reader: &mut PacketReader) -> Result<Self, Errors> {
-        Ok(Self {})
-    }
-}
 impl LoginAcknowledged {
     pub fn new() -> Self {Self {}}
 }

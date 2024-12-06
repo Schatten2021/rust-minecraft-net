@@ -1,5 +1,7 @@
 use crate::{Result, PacketReader, Packet};
 use crate::fields::{encode_bool, encode_string, encode_var_int};
+
+//TODO: implement Packet
 #[derive(Debug)]
 pub enum LinkLabel {
     Builtin(i32),

@@ -1,15 +1,12 @@
-use crate::{Errors, Packet, PacketReader};
-use crate::fields::encode_var_int;
-#[derive(Debug)]
+use minecraft_net_proc::Packet;
+#[derive(Debug, Packet)]
+#[id = 0x03]
 pub struct SetCompression {
+    #[Var]
     pub threshold: i32,
 }
-impl Packet for SetCompression {
-    const ID: i32 = 0x03;
-    fn to_bytes(&self) -> Vec<u8> {
-        encode_var_int(self.threshold)
-    }
-    fn from_reader(reader: &mut PacketReader) -> Result<Self, Errors> {
-        Ok(Self {threshold: reader.read_var_int()?})
+impl SetCompression {
+    pub fn new(threshold: i32) -> Self {
+        Self { threshold }
     }
 }

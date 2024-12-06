@@ -1,6 +1,7 @@
-
 use crate::fields::{encode_string, encode_var_int};
 use crate::{Packet, PacketReader, Result};
+
+//TODO: implement Packet
 #[derive(Debug)]
 pub struct ReportDetail {
     pub title: String,

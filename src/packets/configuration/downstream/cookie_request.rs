@@ -1,20 +1,8 @@
-use crate::fields::encode_string;
-use crate::{Packet, PacketReader};
-use crate::Result;
-#[derive(Debug)]
+use minecraft_net_proc::Packet;
+#[derive(Debug, Packet)]
+#[id = 0x00]
 pub struct CookieRequest {
     pub key: String,
-}
-impl Packet for CookieRequest {
-    const ID: i32 = 0x00;
-    fn to_bytes(&self) -> Vec<u8> {
-        encode_string(self.key.clone())
-    }
-    fn from_reader(reader: &mut PacketReader) -> Result<Self> {
-        Ok(Self {
-            key: reader.read_string()?,
-        })
-    }
 }
 impl CookieRequest {
     pub fn new(key: String) -> Self {

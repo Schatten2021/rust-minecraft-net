@@ -1,4 +1,4 @@
-use crate::fields::encode_int;
+use crate::fields::encode_long;
 use crate::{PacketReader, Result};
 
 pub mod status;
@@ -18,8 +18,8 @@ impl Position {
         Position { x, y, z }
     }
     pub fn to_bytes(&self) -> Vec<u8> {
-        let val = ((self.x & 0x3FFFFFF) << 38) | ((self.z & 0x3FFFFFF) << 12) | (self.y & 0xFFF) as i32;
-        encode_int(val)
+        let val = ((self.x as i64 & 0x3FFFFFF) << 38) | ((self.z as i64 & 0x3FFFFFF) << 12) | (self.y as i64 & 0xFFF) as i64;
+        encode_long(val)
     }
     pub fn from_reader(reader: &mut PacketReader) -> Result<Position> {
         let val = reader.read_long();

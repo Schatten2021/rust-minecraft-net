@@ -1,4 +1,3 @@
-use crate::{Packet, PacketReader, Result};
 //TODO: figure out what Slot is
 #[derive(Debug)]
 pub struct SetContainerContent {

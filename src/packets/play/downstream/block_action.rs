@@ -1,8 +1,8 @@
-use std::panic::Location;
-use crate::{Errors, Packet, PacketReader, Result};
 use crate::fields::{encode_ubyte, encode_var_int};
 use crate::packets::Position;
+use crate::{Packet, PacketReader, Result};
 
+//TODO: add Packet
 #[derive(Debug)]
 pub struct BlockAction {
     pub location: Position,

@@ -1,36 +1,18 @@
+use minecraft_net_proc::Packet;
 use std::time::{SystemTime, UNIX_EPOCH};
-use crate::{Errors, Packet, PacketReader};
-use crate::fields::encode_long;
-#[derive(Debug)]
+#[derive(Debug, Packet)]
+#[id = 0x00]
 pub struct StatusRequest {}
-impl Packet for StatusRequest {
-    const ID: i32 = 0x00;
-    fn to_bytes(&self) -> Vec<u8> {
-        Vec::new()
-    }
-    fn from_reader(_reader: &mut PacketReader) -> Result<Self, Errors> {
-        Ok(Self {})
-    }
-}
 impl StatusRequest {
     pub fn new() -> Self {
         Self {}
     }
 }
-#[derive(Debug)]
+#[derive(Debug, Packet)]
+#[id = 0x01]
 pub struct PingRequest {
+    #[Const]
     pub timestamp: i64,
-}
-impl Packet for PingRequest {
-    const ID: i32 = 0x01;
-    fn to_bytes(&self) -> Vec<u8> {
-        encode_long(self.timestamp)
-    }
-    fn from_reader(reader: &mut PacketReader) -> Result<Self, Errors> {
-        Ok(Self {
-            timestamp: reader.read_long()
-        })
-    }
 }
 impl PingRequest {
     pub fn new(timestamp: i64) -> Self {

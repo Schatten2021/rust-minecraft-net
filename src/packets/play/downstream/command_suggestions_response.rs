@@ -1,6 +1,7 @@
 use crate::{Packet, PacketReader, Result};
 use crate::fields::{encode_bool, encode_string, encode_var_int};
 
+//TODO: add Packet
 #[derive(Debug)]
 pub struct Matches {
     pub r#match: String,

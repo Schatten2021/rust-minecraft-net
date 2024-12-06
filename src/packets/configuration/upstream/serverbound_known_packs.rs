@@ -2,6 +2,7 @@ use crate::fields::encode_var_int;
 use crate::packets::configuration::KnownPack;
 use crate::{Packet, PacketReader, Result};
 
+//TODO: implement Packet
 #[derive(Debug)]
 pub struct ServerBoundKnownPacks {
     pub count: i32,
