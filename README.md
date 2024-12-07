@@ -1,13 +1,13 @@
 # minecraft-net
 This work is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1)
 
-**This package is a work in progress**
+**This package is a work in progress!**
 
 A package implementing the 1.21.1 minecraft protocol.
 
 ## Features / Goals
-- [ ] Structs for all Packes (~74/221 ~33%)
-  - [X] Hanshake (1 packet)
+- [ ] Structs for all Packets (~74/221 ~33%)
+  - [X] Handshake (1 packet)
   - [X] Status (4 packets)
   - [X] Login (11 packets)
   - [X] Configuration (25 packets)
