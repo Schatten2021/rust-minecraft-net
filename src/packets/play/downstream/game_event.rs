@@ -1,7 +1,7 @@
 use minecraft_net_proc::Packet;
 
 #[derive(Debug, Packet)]
-#[id = 0x22]
+#[id = 0x23]
 pub struct GameEvent {
     event: u8,
     value: f32,

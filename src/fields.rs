@@ -1,6 +1,27 @@
 use crate::errors::Errors;
 use bytes::Buf;
 use std::io::Read;
+use crate::Field;
+use crate::fields::types::PrefixedArray;
+
+pub mod types {
+    pub type Byte = i8;
+    pub type UByte = u8;
+    pub type Short = i16;
+    pub type UShort = u16;
+    pub type Int = i32;
+    pub type UInt = u32;
+    pub type Long = i32;
+    pub type UUID = u128;
+    pub type Float = f32;
+    pub type Double = f64;
+    pub type Identifier = String;
+    pub type Angle = u8;
+    pub type VarInt = Int;
+    pub type VarLong = Long;
+    pub type PrefixedArray<T> = Vec<T>;
+    pub type PrefixedOptional<T> = Option<T>;
+}
 
 const SEGMENT_BITS: u8 = 0x7F;
 const CONTINUE_BIT: u8 = 0x80;
@@ -127,6 +148,19 @@ pub fn encode_identifier(ident: String) -> Vec<u8> {
     encode_string(ident)
 }
 pub fn encode_angle(angle: u8) -> Vec<u8> {encode_ubyte(angle)}
+pub fn encode_prefixed_array<T: Field>(array: &Vec<T>) -> Vec<u8> {
+    let mut res = encode_var_int(array.len() as i32);
+    res.append(&mut array.iter().flat_map(|e| e.to_bytes()).collect::<Vec<u8>>());
+    res
+}
+pub fn encode_prefixed_optional<T: Field + Clone>(optional: &Option<T>) -> Vec<u8> {
+    let mut res = encode_bool(optional.is_some());
+    match optional {
+        Some(v) => res.append(&mut T::to_bytes(v)),
+        None => (),
+    }
+    res
+}
 
 
 
@@ -231,6 +265,22 @@ impl PacketReader {
         res
     }
     pub fn read_angle(&mut self) -> u8 {self.read_ubyte()}
+    pub fn read_prefixed_array<T: Field>(&mut self) -> Result<PrefixedArray<T>, Errors> {
+        let len = self.read_var_int()?;
+        let mut vector = Vec::new();
+        for _ in 0..len {
+            vector.push(T::from_reader(self)?);
+        }
+        Ok(vector)
+    }
+    pub fn read_prefixed_optional<T: Field>(&mut self) -> Result<Option<T>, Errors> {
+        let present = self.read_bool()?;
+        if present {
+            Ok(Some(T::from_reader(self)?))
+        } else {
+            Ok(None)
+        }
+    }
 }
 impl Buf for PacketReader {
     fn remaining(&self) -> usize {

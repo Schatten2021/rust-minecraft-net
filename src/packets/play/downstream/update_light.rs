@@ -1,6 +1,7 @@
 pub use crate::packets::play::downstream::chunk_data::{BlockLightArray, SkyLightArray};
 
 #[derive(Debug)]
+// #[id = 0x2B]
 pub struct UpdateLight {
     chunk_x: i32,
     chunk_z: i32,

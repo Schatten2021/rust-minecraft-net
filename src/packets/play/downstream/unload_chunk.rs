@@ -1,7 +1,7 @@
 use minecraft_net_proc::Packet;
 
 #[derive(Debug, Packet)]
-#[id = 0x21]
+#[id = 0x22]
 pub struct UnloadChunk {
     #[Const]
     chunk_z: i32,

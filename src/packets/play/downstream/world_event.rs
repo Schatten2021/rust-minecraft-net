@@ -1,14 +1,13 @@
 use crate::packets::Position;
 use minecraft_net_proc::Packet;
+use crate::fields::types::Int;
 
 #[derive(Debug, Packet)]
-#[id = 0x28]
+#[id = 0x29]
 pub struct WorldEvent {
-    #[Const]
-    pub event: i32,
+    pub event: Int,
     pub location: Position,
-    #[Const]
-    pub data: i32,
+    pub data: Int,
     pub disable_relative_volume: bool,
 }
 impl WorldEvent {

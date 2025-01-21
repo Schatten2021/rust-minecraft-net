@@ -1,7 +1,7 @@
 use minecraft_net_proc::Packet;
 
 #[derive(Debug, Packet)]
-#[id = 0x26]
+#[id = 0x27]
 pub struct ClientBoundKeepAlive {
     #[Const]
     pub keep_alive_id: i64,

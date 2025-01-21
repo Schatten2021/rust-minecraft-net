@@ -1,7 +1,7 @@
 use minecraft_net_proc::Packet;
 
 #[derive(Debug, Packet)]
-#[id = 0x23]
+#[id = 0x24]
 pub struct OpenHorseScreen {
     window_id: u8,
     #[Var]

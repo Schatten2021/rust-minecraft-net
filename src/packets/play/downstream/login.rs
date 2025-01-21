@@ -2,7 +2,7 @@ use minecraft_net_proc::Packet;
 use crate::packets::Position;
 
 #[derive(Debug, Packet)]
-#[id = 0x2B]
+#[id = 0x2C]
 pub struct Login {
     entity_id: i32,
     is_hardcore: bool,

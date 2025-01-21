@@ -1,7 +1,7 @@
 use minecraft_net_proc::Packet;
 
 #[derive(Debug, Packet)]
-#[id = 0x24]
+#[id = 0x25]
 pub struct HurtAnimation {
     #[Var]
     pub entity_id: i32,

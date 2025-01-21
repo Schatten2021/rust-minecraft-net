@@ -1,4 +1,5 @@
 #[derive(Debug)]
+// #[id = 0x2A]
 pub struct Particle {
     long_distance: bool,
     x: f64,

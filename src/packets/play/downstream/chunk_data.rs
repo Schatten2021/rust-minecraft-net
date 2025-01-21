@@ -18,6 +18,7 @@ pub struct BlockLightArray {
 }
 
 #[derive(Debug)]
+// #[id = 0x28]
 pub struct ChunkDataWithLight {
     chunk_x: i32,
     chunk_z: i32,

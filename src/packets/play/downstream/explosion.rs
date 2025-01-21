@@ -1,4 +1,5 @@
 #[derive(Debug)]
+// #[id = 0x21]
 pub struct Explosion {
     x: f64,
     y: f64,

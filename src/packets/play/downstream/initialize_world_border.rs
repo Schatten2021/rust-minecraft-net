@@ -1,7 +1,7 @@
 use minecraft_net_proc::Packet;
 
 #[derive(Debug, Packet)]
-#[id = 0x25]
+#[id = 0x26]
 pub struct InitializeWorldBorder {
     pub x: f64,
     pub y: f64,
