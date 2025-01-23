@@ -21,6 +21,8 @@ pub mod types {
     pub type VarLong = Long;
     pub type PrefixedArray<T> = Vec<T>;
     pub type PrefixedOptional<T> = Option<T>;
+    pub type Position = crate::packets::Position;
+    pub type NBT = crab_nbt::Nbt;
 }
 
 const SEGMENT_BITS: u8 = 0x7F;

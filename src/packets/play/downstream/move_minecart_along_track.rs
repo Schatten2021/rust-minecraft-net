@@ -1,6 +1,6 @@
 use minecraft_net_proc::{Field, Packet};
 use crate::fields::types::{Angle, Double, Float, PrefixedArray, Short, VarInt};
-#[derive(Debug, Field)]
+#[derive(Clone, Debug, Field)]
 pub struct Steps {
     pub x: Double,
     pub y: Double,

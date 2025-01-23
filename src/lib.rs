@@ -25,7 +25,7 @@ pub trait Packet: Sized {
     /// returns: Result<Self, Errors>
     fn from_reader(reader: &mut PacketReader) -> Result<Self>;
 }
-pub trait Field: Sized {
+pub trait Field: Sized + Clone {
     /// Serializes the field into an array of bytes in accordance with the minecraft protocol.
     ///
     /// # Arguments
@@ -40,7 +40,7 @@ pub trait Field: Sized {
     /// returns: Result<Self, Errors>
     fn from_reader(reader: &mut PacketReader) -> Result<Self>;
 }
-impl<T> Field for T where T: Packet {
+impl<T: Clone> Field for T where T: Packet {
     fn to_bytes(&self) -> Vec<u8> {self.to_bytes()}
     fn from_reader(reader: &mut PacketReader) -> Result<Self> {Self::from_reader(reader)}
 }
@@ -56,9 +56,3 @@ impl Field for crab_nbt::Nbt {
 
 pub trait Stream: Read + Write {}
 impl<T> Stream for T where T: Read + Write {}
-#[macro_export] macro_rules! join {
-    () => { vec![] };
-    ( $( $vec:expr ),* ) => {
-        vec![$( $vec ),*].iter().flatten().cloned().collect()
-    };
-}
