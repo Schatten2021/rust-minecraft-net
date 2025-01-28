@@ -1,8 +1,5 @@
 use minecraft_net_proc::Packet;
 
-#[derive(Packet)]
-#[id = 0x37]
-pub struct Ping {
-    #[Const]
-    pub id: i32
-}
+Packet!(Ping, 0x37, {
+    id: Int,
+});

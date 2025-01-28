@@ -1,11 +1,4 @@
-use minecraft_net_proc::Packet;
-#[derive(Debug, Packet)]
-#[id = 0x05]
-pub struct CookieRequest {
-    pub key: String
-}
-impl CookieRequest {
-    pub fn new(key: String) -> Self {
-        Self { key }
-    }
-}
+use minecraft_net_proc::{Packet, Packet_old};
+Packet!(CookieRequest, 0x05, {
+    key: String,
+});

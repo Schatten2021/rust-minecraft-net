@@ -1,8 +1,8 @@
-use minecraft_net_proc::Field;
+use minecraft_net_proc::Field_old;
 
 pub mod upstream;
 pub mod downstream;
-#[derive(Debug, Field, Clone)]
+#[derive(Debug, Field_old, Clone)]
 pub struct KnownPack {
     pub namespace: String,
     pub id: String,

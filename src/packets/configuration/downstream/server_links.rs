@@ -1,6 +1,7 @@
 use crate::fields::{encode_bool, encode_string, encode_var_int};
 use crate::{Field, PacketReader, Result};
-use minecraft_net_proc::Packet;
+use minecraft_net_proc::{Packet, Packet_old};
+use crate::fields::types::PrefixedArray;
 
 #[derive(Debug, Clone)]
 pub enum LinkLabel {
@@ -52,16 +53,6 @@ impl Field for Link {
         }
     }
 }
-#[derive(Debug, Packet)]
-#[id = 0x10]
-pub struct ServerLinks {
-    #[Var]
-    pub count: i32,
-    #[len = "count"]
-    pub links: Vec<Link>,
-}
-impl ServerLinks {
-    pub fn new(links: Vec<Link>) -> Self {
-        Self { count: links.len() as i32, links }
-    }
-}
+Packet!(ServerLinks, 0x10, {
+    links: PrefixedArray<Link>,
+});

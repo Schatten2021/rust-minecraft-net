@@ -1,7 +1,7 @@
-use minecraft_net_proc::Packet;
 use crate::fields::types::{Double, VarInt};
+use minecraft_net_proc::Packet_old;
 
-#[derive(Debug, Packet)]
+#[derive(Debug, Packet_old)]
 #[id = 0x41]
 pub struct LookAt {
     pub feet_eyes: VarInt,

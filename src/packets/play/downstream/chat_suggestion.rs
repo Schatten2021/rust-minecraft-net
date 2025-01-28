@@ -1,20 +1,9 @@
-use minecraft_net_proc::Packet;
+use minecraft_net_proc::{Packet, VarIntEnum};
 
-#[derive(Debug, Packet)]
-#[id = 0x18]
-pub struct ChatSuggestion {
-    action: i32,
-    count: i32,
-    #[len = "count"]
-    entries: Vec<String>,
-}
-
-impl ChatSuggestion {
-    pub fn new(action: i32, entries: Vec<String>) -> Self {
-        Self {
-            action,
-            count: entries.len() as i32,
-            entries,
-        }
-    }
-}
+VarIntEnum!(ChatSuggestionAction, {
+    Add, Remove, Set,
+});
+Packet!(ChatSuggestion, 0x18, {
+    action: ChatSuggestionAction,
+    entries: PrefixedArray<String>,
+});

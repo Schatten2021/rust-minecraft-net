@@ -1,9 +1,9 @@
-//TODO: figure out what Slot is
-#[derive(Debug)]
-pub struct SetContainerContent {
-    window_id: u8,
-    state_id: i32,
-    count: i32,
-    // slot_data: Vec<Slot>
-    // carried_item: Slot
-}
+use crate::packets::Slot;
+use minecraft_net_proc::Packet;
+
+Packet!(SetContainerContent, 0x13, {
+    window_id: VarInt,
+    state_id: VarInt,
+    slot_data: PrefixedArray<Slot>,
+    carried_item: Slot,
+});

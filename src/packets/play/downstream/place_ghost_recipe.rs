@@ -1,13 +1,20 @@
-use minecraft_net_proc::Packet;
-
-#[derive(Packet)]
-#[id = 0x39]
-pub struct PlaceGhostRecipe {
-    window_id: i8,
-    recipe: String,
-}
-impl PlaceGhostRecipe {
-    pub fn new(window_id: i8, recipe: String) -> Self {
-        Self {window_id, recipe}
-    }
-}
+// use minecraft_net_proc::{Field, Packet, VarIntEnum};
+// 
+// Field!(CraftingShapeless, {
+//     ingredient_count: VarInt,
+//     ingredients: Vec<SlotDisplay>
+// })
+// 
+// VarIntEnum!(RecipeDisplay, {
+//     CraftingShapeless,
+//     CraftingShaped,
+//     Furnnace,
+//     StoneCutter,
+//     Smithing,
+// });
+// 
+// Packet!(PlaceGhostRecipe, 0x39, {
+//     window_id: VarInt,
+//     recipe_display: RecipeDisplay
+// });
+// TODO: This changed. Update.

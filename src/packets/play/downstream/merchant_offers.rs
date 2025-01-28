@@ -1,32 +1,25 @@
+use crate::packets::{Component, Slot};
 use minecraft_net_proc::{Field, Packet};
-use crate::fields::types::{PrefixedArray, VarInt};
 
-//TODO: figure out how this stuff works
-#[derive(Debug, Field, Clone)]
-pub struct Component {
-    #[Var]
-    pub r#type: i32,
-    #[Var]
-    pub data: u8, //TODO: figure out type
-}
+Field!(TradeItem, {
+    item_id: VarInt,
+    item_count: VarInt,
+    components: PrefixedArray<Component>,
+});
 
-#[derive(Debug, Field, Clone)]
-pub struct TradeItem {
-    pub item_id: VarInt,
-    pub item_count: VarInt,
-    pub components: PrefixedArray<Component>,
-}
-
-#[derive(Debug, Field, Clone)]
-pub struct Trade {
-    pub input_item1: TradeItem,
-    // pub output_item: Slot TODO: figure out
-    // pub input_item_2: Option<TradeItem>,
-}
-
-#[derive(Debug, Packet)]
-#[id = 0x2E]
-pub struct MerchantOffers {
-    pub window_id: VarInt,
-    pub trades: PrefixedArray<Trade>,
-}
+Field!(Trade, {
+    input_item1: TradeItem,
+    output_item: Slot,
+    input_item2: PrefixedOptional<TradeItem>,
+    trade_disabled: bool,
+    number_of_trade_uses: Int,
+    maximum_number_of_trade_uses: Int,
+    xp: Int,
+    special_price: Int,
+    price_multiplier: Float,
+    demand: Int,
+});
+Packet!(MerchantOffers, 0x2E, {
+    window_id: VarInt,
+    trades: PrefixedArray<Trade>,
+});

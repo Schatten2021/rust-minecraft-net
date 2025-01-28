@@ -1,6 +1,7 @@
 #[derive(Debug)]
 pub enum Errors {
     InvalidField(String),
+    InvalidEnum(String),
     InvalidPacket(String),
     IOError(std::io::Error),
     EncryptionError(openssl::error::ErrorStack),

@@ -1,7 +1,9 @@
-#[derive(Debug)]
-pub struct DebugSample {
-    sample_length: i32,
-    //TODO: figure out what this type is
-    //sample: Vec<?>
-    sample_type: i32,
-}
+use minecraft_net_proc::{Field, Packet, VarIntEnum};
+
+Packet!(DebugSample, 0x1B, {
+    sample: PrefixedArray<Long>,
+    sample_type: SampleType,
+});
+VarIntEnum!(SampleType, {
+    TickTime,
+});

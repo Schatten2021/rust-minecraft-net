@@ -1,9 +1,9 @@
-#[derive(Debug)]
-pub struct SetContainerSlot {
-    pub window_id: i8,
-    pub state_id: i32,
-    pub slot: i16,
-    //TODO: figure out what Slot is
-    
-    // pub slot_data: Slot
-}
+use crate::packets::Slot;
+use minecraft_net_proc::Packet;
+
+Packet!(SetContainerSlot, 0x15, {
+    window_id: VarInt,
+    state_id: VarInt,
+    slot: Short,
+    slot_data: Slot,
+});

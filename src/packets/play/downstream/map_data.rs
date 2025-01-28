@@ -1,42 +1,51 @@
-use minecraft_net_proc::Field;
-use crate::fields::types::{PrefixedArray, PrefixedOptional};
-
-#[derive(Debug, Field, Clone)]
-pub struct Icon {
-    #[Var]
-    r#type: i32,
-    x: i8,
-    z: i8,
-    direction: i8,
-    has_display_name: bool,
-    #[when = "has_display_name"]
-    display_name: Option<String>
+use minecraft_net_proc::{Field, Field_old, Packet};
+use crate::{Field, PacketReader};
+use crate::fields::types::{PrefixedArray, PrefixedOptional, UByte};
+Field!(Icon, {
+    r#type: VarInt,
+    x: Byte,
+    z: Byte,
+    direction: Byte,
+    display_name: PrefixedOptional<String>,
+});
+#[derive(Debug, Clone)]
+pub struct ColourPatch {
+    columns: u8,
+    data: Option<ColourPatchData>
 }
-impl Icon {
-    pub fn new(r#type: i32, x: i8, z: i8, direction: i8, display_name: Option<String>) -> Self {
-        Self {
-            r#type, x, z, direction, has_display_name: display_name.is_some(), display_name
+Field!(ColourPatchData, {
+    rows: UByte,
+    x: UByte,
+    z: UByte,
+    data: PrefixedArray<UByte>
+});
+impl Field for ColourPatch {
+    fn to_bytes(&self) -> Vec<u8> {
+        let mut res = vec![self.columns];
+        if self.columns > 0 {
+            res.append(&mut self.data.as_ref().expect("more than 0 rows but no data").to_bytes());
+        }
+        res
+    }
+    fn from_reader(reader: &mut PacketReader) -> crate::errors::Result<Self> {
+        let columns = reader.read_ubyte();
+        if columns > 0 {
+            Ok(Self {
+                columns,
+                data: Some(ColourPatchData::from_reader(reader)?),
+            })
+        } else {
+            Ok(Self {
+                columns, data: None
+            })
         }
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct ColourPatch {
-    columns: u8,
-    rows: Option<u8>,
-    x: Option<u8>,
-    z: Option<u8>,
-    length: Option<i32>,
-    data: Option<Vec<u8>> //TODO: figure out data type
-}
-
-#[derive(Debug)]
-// #[id = 0x2D]
-pub struct MapData {
-    map_id: i32,
-    scale: u8,
+Packet!(MapData, 0x2D, {
+    map_id: VarInt,
+    scale: Byte,
     locked: bool,
-    has_icons: bool,
     icons: PrefixedOptional<PrefixedArray<Icon>>,
-    
-}
+    color_patch: ColourPatch,
+});

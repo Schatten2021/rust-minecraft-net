@@ -1,15 +1,14 @@
-#[derive(Debug)]
-// #[id = 0x2A]
-pub struct Particle {
+use minecraft_net_proc::Packet;
+
+Packet!(Particle, 0x2A, {
     long_distance: bool,
-    x: f64,
-    y: f64,
-    z: f64,
-    offset_x: f32,
-    offset_y: f32,
-    offset_z: f32,
-    max_speed: f32,
-    particle_count: i32,
-    particle_id: i32,
-    // data: ? TODO: figure out type
-}
+    x: Double,
+    y: Double,
+    z: Double,
+    offset_x: Float,
+    offset_y: Float,
+    offset_z: Float,
+    max_speed: Float,
+    particle_count: Int,
+    data: crate::packets::Particle,
+});

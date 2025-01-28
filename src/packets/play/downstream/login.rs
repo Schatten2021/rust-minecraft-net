@@ -1,7 +1,7 @@
-use minecraft_net_proc::Packet;
+use minecraft_net_proc::Packet_old;
 use crate::packets::Position;
 
-#[derive(Debug, Packet)]
+#[derive(Debug, Packet_old)]
 #[id = 0x2C]
 pub struct Login {
     entity_id: i32,

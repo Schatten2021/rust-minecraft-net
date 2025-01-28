@@ -11,7 +11,7 @@ pub mod types {
     pub type UShort = u16;
     pub type Int = i32;
     pub type UInt = u32;
-    pub type Long = i32;
+    pub type Long = i64;
     pub type UUID = u128;
     pub type Float = f32;
     pub type Double = f64;
