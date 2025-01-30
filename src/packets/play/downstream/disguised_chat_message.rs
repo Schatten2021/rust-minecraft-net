@@ -1,8 +1,9 @@
 use minecraft_net_proc::Packet;
+use crate::fields::types::TextComponent;
 
 Packet!(DisguisedChatMessage, 0x1E, {
-    message: String,
+    message: TextComponent,
     chat_type: VarInt,
-    sender_name: String,
-    target: PrefixedOptional<String>,
+    sender_name: TextComponent,
+    target: PrefixedOptional<TextComponent>,
 });

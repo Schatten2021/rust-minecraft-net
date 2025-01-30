@@ -1,6 +1,6 @@
-use minecraft_net_proc::{Packet, Packet_old};
-use crate::fields::types::{PrefixedOptional, UByte};
+use minecraft_net_proc::Packet;
 
 Packet!(StoreCookie, 0x0A, {
-    payload: PrefixedOptional<UByte>
+    key: Identifier,
+    payload: PrefixedArray<UByte>
 });

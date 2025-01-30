@@ -9,5 +9,4 @@ Packet!(LoginSuccess, 0x02, {
     uuid: UUID,
     username: String,
     properties: PrefixedArray<Property>,
-    strict_error_handling: bool,
 });

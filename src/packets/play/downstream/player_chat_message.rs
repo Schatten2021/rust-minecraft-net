@@ -1,5 +1,5 @@
 use crate::fields::encode_var_int;
-use crate::fields::types::VarInt;
+use crate::fields::types::{TextComponent, VarInt};
 use crate::packets::BitSet;
 use crate::{Field, PacketReader};
 use minecraft_net_proc::{Field, Packet, VarIntEnum};
@@ -14,7 +14,7 @@ impl Field for Signature {
     }
     fn from_reader(reader: &mut PacketReader) -> crate::errors::Result<Self> {
         Ok(Self {
-            dat: vec![0; 256].iter().map(|_| reader.read_ubyte()).collect(),
+            dat: reader.read_byte_array(256),
         })
     }
 }
@@ -56,13 +56,13 @@ VarIntEnum!(FilterType, {
     PartiallyFiltered: BitSet,
 });
 Field!(Other, {
-    unsigned_content: PrefixedOptional<String>,
+    unsigned_content: PrefixedOptional<TextComponent>,
     filter_type: FilterType,
 });
 Field!(ChatFormatting, {
     chat_type: VarInt,
-    sender_name: String,
-    target_name: PrefixedOptional<String>,
+    sender_name: TextComponent,
+    target_name: PrefixedOptional<TextComponent>,
 });
 
 Packet!(PlayerChatMessage, 0x3B, {

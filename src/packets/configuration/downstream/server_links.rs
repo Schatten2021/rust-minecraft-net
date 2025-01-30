@@ -1,12 +1,12 @@
 use crate::fields::{encode_bool, encode_string, encode_var_int};
 use crate::{Field, PacketReader, Result};
-use minecraft_net_proc::{Packet, Packet_old};
-use crate::fields::types::PrefixedArray;
+use minecraft_net_proc::Packet;
+use crate::fields::types::TextComponent;
 
 #[derive(Debug, Clone)]
 pub enum LinkLabel {
     Builtin(i32),
-    Other(String),
+    Custom(TextComponent),
 }
 #[derive(Debug, Clone)]
 pub struct Link {
@@ -19,7 +19,7 @@ impl Link {
         Self {
             is_builtin: match label {
                 LinkLabel::Builtin(_) => true,
-                LinkLabel::Other(_) => false
+                LinkLabel::Custom(_) => false
             },
             label,
             url,
@@ -31,7 +31,7 @@ impl Field for Link {
         let mut res = encode_bool(self.is_builtin);
         res.append(&mut match &self.label {
             LinkLabel::Builtin(v) => encode_var_int(v.clone()),
-            LinkLabel::Other(s) => encode_string(s.clone()),
+            LinkLabel::Custom(s) => s.to_bytes(),
         });
         res.append(&mut encode_string(self.url.clone()));
         res
@@ -47,7 +47,7 @@ impl Field for Link {
         } else {
             Ok(Self {
                 is_builtin,
-                label: LinkLabel::Other(reader.read_string()?),
+                label: LinkLabel::Custom(reader.read()?),
                 url: reader.read_string()?,
             })
         }

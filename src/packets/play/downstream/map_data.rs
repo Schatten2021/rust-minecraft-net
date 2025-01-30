@@ -1,12 +1,12 @@
 use minecraft_net_proc::{Field, Field_old, Packet};
 use crate::{Field, PacketReader};
-use crate::fields::types::{PrefixedArray, PrefixedOptional, UByte};
+use crate::fields::types::{PrefixedArray, PrefixedOptional, TextComponent, UByte};
 Field!(Icon, {
     r#type: VarInt,
     x: Byte,
     z: Byte,
     direction: Byte,
-    display_name: PrefixedOptional<String>,
+    display_name: PrefixedOptional<TextComponent>,
 });
 #[derive(Debug, Clone)]
 pub struct ColourPatch {

@@ -1,8 +1,8 @@
 use std::fmt::Debug;
 use minecraft_net_proc::{Field, Field_old};
 use crate::fields::{encode_bool, encode_int, encode_long, encode_string, encode_var_int};
-use crate::{Field, PacketReader, Result};
-use crate::fields::types::{Identifier, Int, PrefixedArray, PrefixedOptional, VarInt, NBT};
+use crate::{Errors, Field, PacketReader, Result};
+use crate::fields::types::{Identifier, Int, PrefixedArray, PrefixedOptional, TextComponent, VarInt, NBT};
 
 pub mod status;
 pub mod handshake;

@@ -12,7 +12,7 @@ pub struct Handshake {
 impl Handshake {
     pub fn new(server_addr: String, server_port: u16, next_state: i32) -> Self {
         Self {
-            protocol_version: 767, // only supported protocol version rn
+            protocol_version: 769, // only supported protocol version rn
             server_addr,
             server_port,
             next_state

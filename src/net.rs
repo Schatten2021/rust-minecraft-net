@@ -26,15 +26,13 @@ impl Read for EncryptedTcp {
     fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
         let mut read_buff = vec![0; buf.len()];
         self.stream.read(&mut *read_buff)?;
-        self.decryptor.update(&*read_buff, buf)
-            .map_err(|e| Error::new(std::io::ErrorKind::Other, e))
+        Ok(self.decryptor.update(&*read_buff, buf)?)
     }
 }
 impl Write for EncryptedTcp {
     fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
         let mut encrypted_buff = vec![0; buf.len()];
-        self.encryptor.update(buf, &mut *encrypted_buff)
-            .map_err(|e| Error::new(std::io::ErrorKind::Other, e))?;
+        self.encryptor.update(buf, &mut *encrypted_buff)?;
         self.stream.write(&*encrypted_buff)
     }
 
@@ -86,7 +84,7 @@ fn compress_packet_data(mut data: Vec<u8>, threshold: Option<usize>) -> Result<V
 pub fn receive_packet<T: Packet>(mut stream: impl Read, with_compression: bool) -> Result<T, Errors> {
     let len = read_var_int_from_stream(&mut stream)? as usize;
     let mut data = vec![0;len];
-    stream.read(&mut *data).map_err(|e| Errors::IOError(e))?;
+    stream.read_exact(&mut *data).map_err(|e| Errors::IOError(e))?;
     let mut reader = decompress_packet_data(data, with_compression)?;
     let _id = reader.read_var_int()?;
     let packet = T::from_reader(&mut reader)?;

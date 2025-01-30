@@ -44,15 +44,6 @@ impl<T: Clone> Field for T where T: Packet {
     fn to_bytes(&self) -> Vec<u8> {self.to_bytes()}
     fn from_reader(reader: &mut PacketReader) -> Result<Self> {Self::from_reader(reader)}
 }
-impl Field for crab_nbt::Nbt {
-    fn to_bytes(&self) -> Vec<u8> {
-        self.write_unnamed().to_vec()
-    }
-
-    fn from_reader(reader: &mut PacketReader) -> Result<Self> {
-        Self::read(reader).map_err(|e| Errors::NbtError(e))
-    }
-}
 
 pub trait Stream: Read + Write {}
 impl<T> Stream for T where T: Read + Write {}

@@ -1,5 +1,5 @@
-use crate::Field;
 use minecraft_net_proc::{Field, Packet, VarIntEnum};
+use crate::fields::types::TextComponent;
 
 VarIntEnum!(BossBarColor, {
     Pink, Blue, Red, Green, Yellow, Purple, White
@@ -8,7 +8,7 @@ VarIntEnum!(BossBarDevisions, {
     NoDivisions, Six, Ten, Twelve, Twenty,
 });
 Field!(BossBarAdd, {
-    title: String,
+    title: TextComponent,
     health: Float,
     color: BossBarColor,
     division: BossBarDevisions,
@@ -22,7 +22,7 @@ VarIntEnum!(BossBarActions, {
     Add: BossBarAdd
     Remove
     UpdateHealth: Float
-    UpdateTitle: String
+    UpdateTitle: TextComponent
     UpdateStyle: BossBarUpdateStyle
     UpdateFlags: UByte
 });

@@ -1,3 +1,5 @@
+pub mod nbt;
+
 use crate::errors::Errors;
 use bytes::Buf;
 use std::io::Read;
@@ -22,7 +24,8 @@ pub mod types {
     pub type PrefixedArray<T> = Vec<T>;
     pub type PrefixedOptional<T> = Option<T>;
     pub type Position = crate::packets::Position;
-    pub type NBT = crab_nbt::Nbt;
+    pub type NBT = super::nbt::NetworkNBT;
+    pub type TextComponent = super::nbt::TextComponent;
 }
 
 const SEGMENT_BITS: u8 = 0x7F;
@@ -179,18 +182,21 @@ impl PacketReader {
 
 impl PacketReader {
     pub fn read_bool(&mut self) -> Result<bool, Errors> {
-        match self.read() {
+        match self.read_() {
             0x00 => Ok(false),
             0x01 => Ok(true),
             val => Err(Errors::InvalidField(format!("boolean isn't 0x00 or 0x01 but {}", val))),
         }
     }
-    pub fn read_ubyte(&mut self) -> u8 { self.read() }
-    pub fn read_byte(&mut self) -> i8 { self.read() as i8 }
+    pub fn read_ubyte(&mut self) -> u8 { self.read_() }
+    pub fn read_byte(&mut self) -> i8 { self.read_() as i8 }
     pub fn read_ushort(&mut self) -> u16 {
-        self.concat(2) as u16
+        let arr: [u8; 2] = [self.read_(), self.read_()];
+        u16::from_be_bytes(arr)
     }
-    pub fn read_short(&mut self) -> i16 { self.concat(2) as i16 }
+    pub fn read_short(&mut self) -> i16 {
+        i16::from_be_bytes([self.read_(), self.read_()])
+    }
     pub fn read_uint(&mut self) -> u32 {
         self.concat(4) as u32
     }
@@ -223,7 +229,7 @@ impl PacketReader {
         let mut value: i32 = 0;
         let mut position = 0;
         loop {
-            let byte = self.read();
+            let byte = self.read_();
             value |= ((byte & SEGMENT_BITS) as i32) << position;
             if (byte & CONTINUE_BIT) == 0 {
                 return Ok(value);
@@ -238,7 +244,7 @@ impl PacketReader {
         let mut value: i64 = 0;
         let mut position = 0;
         loop {
-            let byte = self.read();
+            let byte = self.read_();
             value |= ((byte & SEGMENT_BITS) as i64) << position;
             if (byte & CONTINUE_BIT) == 0 {
                 return Ok(value);
@@ -252,7 +258,8 @@ impl PacketReader {
     pub fn read_string(&mut self) -> Result<String, Errors> {
         let length = self.read_var_int()?;
         let data = self.read_n(length as usize);
-        let string = String::from_utf8(data).map_err(|_| Errors::InvalidField("String isn't valid UTF-8".into()))?;
+        let string = String::from_utf8(data)?;
+        println!("{}", string);
         Ok(string)
     }
     pub fn read_identifier(&mut self) -> Result<String, Errors> {
@@ -283,22 +290,12 @@ impl PacketReader {
             Ok(None)
         }
     }
-}
-impl Buf for PacketReader {
-    fn remaining(&self) -> usize {
-        self.data.len() - self.position
-    }
-
-    fn chunk(&self) -> &[u8] {
-        &self.data[self.position..]
-    }
-
-    fn advance(&mut self, cnt: usize) {
-        self.position += cnt
+    pub fn read<T: Field>(&mut self) -> Result<T, Errors> {
+        T::from_reader(self)
     }
 }
 impl PacketReader {
-    fn read(&mut self) -> u8 {
+    fn read_(&mut self) -> u8 {
         let value = self.data[self.position];
         self.position += 1;
         value
@@ -311,7 +308,7 @@ impl PacketReader {
     fn concat(&mut self, size: usize) -> u128 {
         let mut result: u128 = 0;
         for i in 0..size {
-            result |= (self.read() as u128) << ((size - i - 1) * 8)
+            result |= (self.read_() as u128) << ((size - i - 1) * 8)
         }
         result
     }
