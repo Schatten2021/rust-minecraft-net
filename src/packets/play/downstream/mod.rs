@@ -65,3 +65,5 @@ mod player_info_removed;
 mod player_info_update;
 mod look_at;
 mod synchronize_player_position;
+mod player_rotation;
+mod recipe_book_add;

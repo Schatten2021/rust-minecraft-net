@@ -1,4 +1,9 @@
 pub mod nbt;
+pub mod slot;
+pub mod block_predicate;
+pub mod particles;
+pub mod chunk_and_light;
+pub mod general;
 
 use crate::errors::Errors;
 use bytes::Buf;
@@ -23,7 +28,7 @@ pub mod types {
     pub type VarLong = Long;
     pub type PrefixedArray<T> = Vec<T>;
     pub type PrefixedOptional<T> = Option<T>;
-    pub type Position = crate::packets::Position;
+    pub type Position = crate::fields::general::Position;
     pub type NBT = super::nbt::NetworkNBT;
     pub type TextComponent = super::nbt::TextComponent;
 }

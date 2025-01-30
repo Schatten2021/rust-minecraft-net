@@ -1,4 +1,4 @@
-use crate::packets::Position;
+use crate::fields::general::Position;
 use minecraft_net_proc::Packet;
 Packet!(SetBlockDestroyStage, 0x06, {
     entity_id: VarInt,

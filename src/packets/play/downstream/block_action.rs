@@ -1,4 +1,4 @@
-use crate::packets::Position;
+use crate::fields::general::Position;
 use minecraft_net_proc::Packet;
 Packet!(BlockAction, 0x08, {
     location: Position,

@@ -1,5 +1,5 @@
 use minecraft_net_proc::Packet_old;
-use crate::packets::Position;
+use crate::fields::general::Position;
 
 #[derive(Debug, Packet_old)]
 #[id = 0x2C]

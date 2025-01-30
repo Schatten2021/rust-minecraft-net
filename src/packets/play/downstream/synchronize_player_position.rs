@@ -1,5 +1,5 @@
-use crate::packets::TeleportFlags;
 use minecraft_net_proc::Packet;
+use crate::fields::general::TeleportFlags;
 
 Packet!(SynchronizePlayerPosition, 0x42, {
     teleport_id: VarInt,

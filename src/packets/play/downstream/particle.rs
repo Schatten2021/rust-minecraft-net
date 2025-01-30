@@ -10,5 +10,5 @@ Packet!(Particle, 0x2A, {
     offset_z: Float,
     max_speed: Float,
     particle_count: Int,
-    data: crate::packets::Particle,
+    data: crate::fields::particles::Particle,
 });

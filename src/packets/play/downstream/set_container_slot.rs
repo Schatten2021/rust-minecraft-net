@@ -1,4 +1,4 @@
-use crate::packets::Slot;
+use crate::fields::slot::Slot;
 use minecraft_net_proc::Packet;
 
 Packet!(SetContainerSlot, 0x15, {

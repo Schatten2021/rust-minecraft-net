@@ -1,5 +1,5 @@
-use crate::packets::{Component, Slot};
 use minecraft_net_proc::{Field, Packet};
+use crate::fields::slot::{Component, Slot};
 
 Field!(TradeItem, {
     item_id: VarInt,

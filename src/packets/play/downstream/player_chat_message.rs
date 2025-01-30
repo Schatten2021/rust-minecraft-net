@@ -1,8 +1,8 @@
 use crate::fields::encode_var_int;
 use crate::fields::types::{TextComponent, VarInt};
-use crate::packets::BitSet;
 use crate::{Field, PacketReader};
 use minecraft_net_proc::{Field, Packet, VarIntEnum};
+use crate::fields::general::BitSet;
 
 #[derive(Clone, Debug)]
 struct Signature {
