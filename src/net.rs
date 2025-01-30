@@ -4,7 +4,7 @@ use crate::{Packet, PacketReader};
 use flate2::read::{ZlibDecoder, ZlibEncoder};
 use flate2::Compression;
 use openssl::symm::{Cipher, Crypter, Mode};
-use std::io::{Error, Read, Write};
+use std::io::{Read, Write};
 use std::net::TcpStream;
 
 

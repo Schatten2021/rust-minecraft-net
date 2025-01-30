@@ -1,8 +1,7 @@
-use std::io::Read;
 use crate::fields::types::{Byte, Double, Float, Int, Long, Short, UShort};
 use crate::fields::{encode_double, encode_float, encode_int, encode_long, encode_short, encode_ushort};
-use crate::{Errors, Field, Result};
 use crate::PacketReader;
+use crate::{Errors, Field, Result};
 
 macro_rules! prefix {
     ($id:expr, $data:expr) => {vec![$id].into_iter().chain($data).collect::<Vec<u8>>()};
@@ -166,7 +165,6 @@ impl Field for NBT {
         }
         let name_length = reader.read_ushort();
         let buf = reader.read_byte_array(name_length as usize);
-        let tmp = String::from_utf8_lossy(&*buf);
         let name = cesu8::from_java_cesu8(&*buf)?.to_string();
 
         let data = Tag::from_reader_with_type(reader, type_id)?;

@@ -1,6 +1,6 @@
-use minecraft_net_proc::{Field, Field_old, Packet};
+use crate::fields::types::TextComponent;
 use crate::{Field, PacketReader};
-use crate::fields::types::{PrefixedArray, PrefixedOptional, TextComponent, UByte};
+use minecraft_net_proc::{Field, Packet};
 Field!(Icon, {
     r#type: VarInt,
     x: Byte,

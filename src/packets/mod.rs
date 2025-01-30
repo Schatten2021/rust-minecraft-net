@@ -1,8 +1,8 @@
-use std::fmt::Debug;
-use minecraft_net_proc::{Field, Field_old};
+use crate::fields::types::{Identifier, Int, PrefixedArray, PrefixedOptional, VarInt, NBT};
 use crate::fields::{encode_bool, encode_int, encode_long, encode_string, encode_var_int};
-use crate::{Errors, Field, PacketReader, Result};
-use crate::fields::types::{Identifier, Int, PrefixedArray, PrefixedOptional, TextComponent, VarInt, NBT};
+use crate::{Field, PacketReader, Result};
+use minecraft_net_proc::{Field, Field_old};
+use std::fmt::Debug;
 
 pub mod status;
 pub mod handshake;
@@ -39,10 +39,10 @@ impl Field for Position {
 }
 pub use slot::*;
 mod slot {
-    use minecraft_net_proc::{Field, VarIntEnum};
-    use crate::fields::{encode_prefixed_array};
-    use crate::fields::types::{Double, Float, Int, UUID};
     use super::*;
+    use crate::fields::types::{Float, Int, UUID};
+    use crate::fields::encode_prefixed_array;
+    use minecraft_net_proc::{Field, VarIntEnum};
     #[derive(Debug, Clone)]
     pub struct Slot {
         pub item_count: VarInt,
@@ -356,8 +356,8 @@ mod slot {
 }
 pub use block_predicate::*;
 mod block_predicate {
-    use crate::fields::encode_string;
     use super::*;
+    use crate::fields::encode_string;
     #[derive(Debug, Clone, Field_old)]
     pub struct BlockPredicate {
         pub blocks: PrefixedOptional<IDSet>,
@@ -558,8 +558,8 @@ mod chunk_and_light {
 }
 use chunk_and_light::*;
 mod particles {
-    use minecraft_net_proc::{Field, VarIntEnum};
     use crate::packets::{Position, Slot};
+    use minecraft_net_proc::{Field, VarIntEnum};
 
     VarIntEnum!(Particle, {
         AngryVillager,
