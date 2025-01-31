@@ -1,5 +1,4 @@
-use minecraft_net_proc::{Field, Field_old, Packet, Packet_old};
-use crate::fields::types::PrefixedArray;
+use minecraft_net_proc::{Field, Packet};
 
 Field!(Tag, {
     tag_name: String,

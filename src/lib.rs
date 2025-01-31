@@ -40,10 +40,14 @@ pub trait Field: Sized + Clone {
     /// returns: Result<Self, Errors>
     fn from_reader(reader: &mut PacketReader) -> Result<Self>;
 }
-impl<T: Clone> Field for T where T: Packet {
-    fn to_bytes(&self) -> Vec<u8> {self.to_bytes()}
-    fn from_reader(reader: &mut PacketReader) -> Result<Self> {Self::from_reader(reader)}
-}
+impl<T: Field> Field for Box<T> {
+    fn to_bytes(&self) -> Vec<u8> {
+        Field::to_bytes(self.as_ref())
+    }
 
+    fn from_reader(reader: &mut PacketReader) -> Result<Self> {
+        Ok(Self::new(reader.read::<T>()?))
+    }
+}
 pub trait Stream: Read + Write {}
 impl<T> Stream for T where T: Read + Write {}

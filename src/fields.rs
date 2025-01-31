@@ -6,7 +6,6 @@ pub mod chunk_and_light;
 pub mod general;
 
 use crate::errors::Errors;
-use bytes::Buf;
 use std::io::Read;
 use crate::Field;
 use crate::fields::types::PrefixedArray;

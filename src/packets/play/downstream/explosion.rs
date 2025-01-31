@@ -1,19 +1,18 @@
-#[derive(Debug)]
-// #[id = 0x21]
-pub struct Explosion {
-    x: f64,
-    y: f64,
-    z: f64,
-    strength: f32,
-    record_count: i32,
-    records: Vec<(u8, u8, u8)>,
-    player_motion_x: f32,
-    player_motion_y: f32,
-    player_motion_z: f32,
-    block_interaction: i32,
-    small_explosion_particle_id: i32,
-    // small_explosion_particle_data: ? TODO: figure out type
-    large_explosion_particle_id: i32,
-    // large_explosion_particle_data: ? TODO: figure out type
-    // explosion_sound: ? TODO: figure out type
-}
+use minecraft_net_proc::{Field, Packet};
+use crate::fields::general::IdOr;
+use crate::fields::particles::Particle;
+use crate::fields::slot::SoundEvent;
+
+Packet!(Explosion, 0x21, {
+    x: Double,
+    y: Double,
+    z: Double,
+    player_velocity: PrefixedOptional<PlayerVelocity>,
+    explosion_particle: Particle,
+    explosion_sound: IdOr<SoundEvent>
+});
+Field!(PlayerVelocity, {
+    x: Double,
+    y: Float,
+    z: Float,
+});

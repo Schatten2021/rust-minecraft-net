@@ -1,7 +1,7 @@
 use crate::fields::block_predicate::BlockPredicate;
-use crate::fields::general::IDSet;
+use crate::fields::general::{IDSet, IdOr};
 use crate::fields::types::*;
-use crate::fields::{encode_bool, encode_prefixed_array, encode_var_int};
+use crate::fields::{encode_bool, encode_identifier, encode_prefixed_array, encode_string, encode_var_int};
 use crate::PacketReader;
 use crate::{Field, Result};
 use minecraft_net_proc::{Field, Field_old, VarIntEnum};
@@ -79,7 +79,7 @@ VarIntEnum!(Component, {
         Reparable: IDSet,
         Glider,
         TooltipStyle: Identifier,
-        // DeathProtection: PrefixedArray<ConsumeEffect> TODO
+        DeathProtection: PrefixedArray<ConsumeEffect>,
         StoredEnchantments: OptionalTooltip<StoredEnchantment>,
         DyedColor: DyedColor,
         MapColor: Int,
@@ -97,16 +97,16 @@ VarIntEnum!(Component, {
         EntityData: NBT,
         BucketEntityData: NBT,
         BlockEntityData: NBT,
-        // Instrument: IdOr<Instrument>, TODO
+        Instrument: IdOr<Instrument>,
         OminousBottleAmplifier: VarInt,
         JukeboxPlayable: JukeboxPlayable,
         Recipes: NBT,
         LodestoneTracker: LodestoneTracker,
-        // FireworkExplosion: FireworkExplosion, TODO
+        FireworkExplosion: FireworkExplosion, 
         Profile: Profile,
         NoteBlockSound: Identifier,
         BannerPatterns: PrefixedArray<BannerPattern>,
-        // BaseColor: DyeColor, TODO
+        BaseColor: DyeColor, 
         PotDecorations: PrefixedArray<VarInt>,
         Container: PrefixedArray<Slot>,
         BlockState: PrefixedArray<BlockState>,
@@ -145,11 +145,10 @@ impl<T: Debug + Clone + Field> Field for OptionalTooltip<PrefixedArray<T>> {
         })
     }
 }
-#[derive(Debug, Clone, Field_old)]
-pub struct Enchantment {
+Field!(Enchantment, {
     pub type_id: VarInt,
     pub level: VarInt,
-}
+});
 Field!(AttributeModifier, {
         attribute_id: VarInt,
         modifier_id: Identifier,
@@ -163,156 +162,271 @@ Field!(CustomModelData, {
         strings: PrefixedArray<String>,
         colors: PrefixedArray<Int>,
     });
-#[derive(Clone, Debug, Field_old)]
-pub struct Food {
+Field!(Food, {
     pub nutrition: VarInt,
     pub saturation_modifier: Float,
     pub can_always_eat: bool,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct Consumable {
-    pub consume_seconds: Float,
-    pub animation: VarInt,
-    // pub sound: IdOR<SoundEvent>, TODO
-    pub has_consume_particles: bool,
-    // pub effects: PrefixedArray<ConsumeEffect>, TODO
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct UseCooldown {
-    pub seconds: Float,
+});
+Field!(Consumable, {
+    consume_seconds: Float,
+    animation: VarInt,
+    sound: IdOr<SoundEvent>,
+    has_consume_particles: bool,
+    effects: PrefixedArray<ConsumeEffect>,
+});
+Field!(UseCooldown, {
+    seconds: Float,
     // TODO: verify that this is true.
     // The wiki says something about "Only present if Has cooldown group is true" but doesn't mention "Has Cooldown group" anywhere else.
-    pub cooldown_group: PrefixedOptional<Identifier>
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct Tool {
-    pub rule: PrefixedArray<ToolRule>,
-    pub default_mining_speed: Float,
-    pub damage_per_block: VarInt,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct ToolRule {
+    cooldown_group: PrefixedOptional<Identifier>
+});
+Field!(Tool, {
+    rule: PrefixedArray<ToolRule>
+    default_mining_speed: Float,
+    damage_per_block: VarInt,
+});
+Field!(ToolRule, {
     pub blocks: IDSet,
     pub speed: PrefixedOptional<Float>,
     pub correct_drop_for_blocks: PrefixedOptional<bool>,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct Equippable {
-    pub slot: VarInt,
-    // pub EquipSound: IdOr<SoundEvent>, TODO
-    pub model: PrefixedOptional<Identifier>,
-    pub camera_overlay: PrefixedOptional<Identifier>,
-    pub allowed_entities: PrefixedOptional<IDSet>,
-    pub dispensable: bool,
-    pub swappable: bool,
-    pub damage_on_hurt: bool,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct StoredEnchantment {
+});
+Field!(Equippable, {
+    slot: VarInt,
+    equip_sound: IdOr<SoundEvent>,
+    model: PrefixedOptional<Identifier>,
+    camera_overlay: PrefixedOptional<Identifier>,
+    allowed_entities: PrefixedOptional<IDSet>,
+    dispensable: bool,
+    swappable: bool,
+    damage_on_hurt: bool,
+});
+Field!(StoredEnchantment, {
     pub type_id: VarInt,
     pub level: VarInt,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct DyedColor {
+});
+Field!(DyedColor, {
     pub color: Int,
     pub show_in_tooltip: bool,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct PotionContents {
+});
+Field!(PotionContents, {
     pub potion_id: PrefixedOptional<VarInt>,
     pub custom_color: PrefixedOptional<Int>,
-    // pub custom_effects: PrefixedArray<PotionEffect>, TODO
-    pub custon_name: String,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct SuspiciousStewEffect {
+    pub custom_effects: PrefixedArray<PotionEffect>,
+    pub custom_name: String,
+});
+Field!(SuspiciousStewEffect, {
     pub type_id: VarInt,
     pub duration: VarInt,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct WritableBookContent {
+});
+Field!(WritableBookContent, {
     pub raw_content: String,
     pub filtered_content: PrefixedOptional<String>,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct WrittenBookContent {
+});
+Field!(WrittenBookContent, {
     pub raw_title: String,
     pub filtered_title: PrefixedOptional<String>,
     pub author: String,
     pub generation: VarInt,
     pub pages: PrefixedArray<WritableBookContent>,
     pub resolved: bool,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct Trim {
-    // pub trim_material: IdOr<TrimMaterial>, TODO
-    // pub trim_pattern: IdOr<TrimPattern>, TODO
+});
+Field!(Trim, {
+    pub trim_material: IdOr<TrimMaterial>, 
+    pub trim_pattern: IdOr<TrimPattern>, 
     pub show_in_tooltip: bool
-}
+});
+Field!(TrimMaterial, {
+    asset_name: String,
+    ingredient: VarInt,
+    item_model_index: Float,
+    overrides: PrefixedArray<TrimMaterialOverride>,
+    description: TextComponent,
+});
+Field!(TrimMaterialOverride, {
+    armor_material_type: VarInt,
+    overriden_asset_name: String,
+});
+Field!(TrimPattern, {
+    asset_name: String,
+    template_item: VarInt,
+    description: TextComponent,
+    decal: bool,
+});
 #[derive(Clone, Debug)]
 pub struct JukeboxPlayable {
     pub direct_mode: bool,
     pub jukebox_song_name: Option<Identifier>,
-    // pub jukebox_song: Option<IdOr<JukeboxSong>>, TODO
+    pub jukebox_song: Option<IdOr<JukeboxSong>>,
     pub show_in_tooltip: bool,
 }
 impl Field for JukeboxPlayable {
     fn to_bytes(&self) -> Vec<u8> {
-        todo!()
+        encode_bool(self.direct_mode).into_iter()
+            .chain(
+                if self.direct_mode { 
+                    self.jukebox_song.clone().expect("Direct mode set, but Jukebox Song is None").to_bytes()
+                } else {
+                    encode_identifier(self.jukebox_song_name.clone().expect("Direct mode not set, but Jukebox Song name is Non"))
+                })
+            .chain(encode_bool(self.show_in_tooltip))
+            .collect::<Vec<u8>>()
     }
 
     fn from_reader(reader: &mut PacketReader) -> Result<Self> {
-        todo!()
+        let direct_mode = reader.read_bool()?;
+        if direct_mode {
+            Ok(Self {
+                direct_mode,
+                jukebox_song: Some(reader.read()?),
+                jukebox_song_name: None,
+                show_in_tooltip: reader.read_bool()?,
+            })
+        } else {
+            Ok(Self {
+                direct_mode,
+                jukebox_song: None,
+                jukebox_song_name: Some(reader.read_identifier()?),
+                show_in_tooltip: reader.read_bool()?,
+            })
+        }
     }
 }
-#[derive(Clone, Debug, Field_old)]
-pub struct LodestoneTracker {
+// TODO: The wiki says that these are all Optional, but not when they are present.
+Field!(JukeboxSong, {
+    sound_event: SoundEvent,
+    description: TextComponent,
+    duration: Float,
+    output: VarInt,
+});
+Field!(LodestoneTracker, {
     pub has_global_position: bool,
     pub dimension: Identifier,
     pub position: Position,
     pub tracked: bool,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct Fireworks {
+});
+Field!(Fireworks, {
     pub flight_duration: VarInt,
-    // pub Explosions: PrefixedArray<FireworkExplosion>, TODO
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct Profile {
+    pub explosions: PrefixedArray<FireworkExplosion>,
+});
+Field!(Profile, {
     pub name: PrefixedOptional<String>,
     pub uuid: PrefixedOptional<UUID>,
     pub property: PrefixedArray<ProfileProperty>
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct ProfileProperty {
+});
+Field!(ProfileProperty, {
     pub name: String,
     pub value: String,
     pub signature: PrefixedOptional<String>,
-}
+});
 #[derive(Clone, Debug)]
 pub struct BannerPattern {
     pub pattern_type: VarInt,
     pub asset_id: Option<Identifier>,
     pub translation_key: Option<String>,
-    // pub color: DyeColor, TODO
+    pub color: DyeColor,
 }
 impl Field for BannerPattern {
     fn to_bytes(&self) -> Vec<u8> {
-        todo!()
+        let mut res = encode_var_int(self.pattern_type);
+        if self.pattern_type == 0 {
+            res = res.into_iter().chain(encode_identifier(self.asset_id.clone().expect("pattern_type is 0, but asset_id is None")))
+                .chain(encode_string(self.translation_key.clone().expect("pattern_type is 0, but translation_key is None")))
+                .collect();
+        }
+        res.into_iter().chain(self.color.clone().to_bytes()).collect()
     }
 
     fn from_reader(reader: &mut PacketReader) -> Result<Self> {
-        todo!()
+        let pattern_type = reader.read_var_int()?;
+        if pattern_type == 0 {
+            Ok(Self {
+                pattern_type,
+                asset_id: Some(reader.read_identifier()?),
+                translation_key: Some(reader.read_string()?),
+                color: reader.read()?
+            })
+        } else { 
+            Ok(Self {
+                pattern_type,
+                asset_id: None,
+                translation_key: None,
+                color: reader.read()?
+            })
+        }
     }
 }
-#[derive(Clone, Debug, Field_old)]
-pub struct BlockState {
+Field!(BlockState, {
     pub name: String,
     pub value: String,
-}
-#[derive(Clone, Debug, Field_old)]
-pub struct Bee {
+});
+Field!(Bee, {
     pub entity_data: NBT,
     pub ticks_in_hive: VarInt,
     pub min_ticks_in_hive: VarInt,
-}
+});
+
+VarIntEnum!(ConsumeEffect, {
+    ApplyEffects: ApplyEffects
+    RemoveEffects: IDSet,
+    ClearAllEffects,
+    TeleportRandomly: Float,
+    PlaySound: SoundEvent
+});
+Field!(ApplyEffects, {
+    effects: PrefixedArray<PotionEffect>, // TODO: verify that this is indeed a PrefixedArray. The wiki says that it's an Array
+    probability: Float,
+});
+Field!(PotionEffect, {
+    type_id: VarInt,
+    details: PotionEffectDetail,
+});
+Field!(PotionEffectDetail, {
+    amplifier: VarInt,
+    duration: VarInt,
+    ambient: bool,
+    show_particles: bool,
+    show_icon: bool,
+    hidden_effect: PrefixedOptional<Box<PotionEffectDetail>>
+});
+Field!(SoundEvent, {
+    sound_name: Identifier,
+    fixed_range: PrefixedOptional<Float>
+});
+Field!(Instrument, {
+    sound_event: IdOr<SoundEvent>,
+    use_duration: Float,
+    range: Float,
+    description: TextComponent,
+});
+Field!(FireworkExplosion, {
+    shape: FireworkExplosionShape,
+    colors: PrefixedArray<Int>,
+    fade_colors: PrefixedArray<Int>,
+    has_trail: bool,
+    has_twinkle: bool,
+});
+VarIntEnum!(FireworkExplosionShape, {
+    SmallBall,
+    LargeBall,
+    Star,
+    Creeper,
+    Burst,
+});
+VarIntEnum!(DyeColor, {
+    White,
+    Orange,
+    Magenta,
+    LightBlue,
+    Yellow,
+    Lime,
+    Pink,
+    Gray,
+    LightGray,
+    Cyan,
+    Purple,
+    Blue,
+    Brown,
+    Green,
+    Red,
+    Black,
+});
